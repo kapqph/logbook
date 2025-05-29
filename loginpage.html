@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(-45deg, #3a6235, #4a7a3f, #2e4e28, #3a6235);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 10s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .left-shape {
+      left: 0;
+      width: 150px;
+      height: 150px;
+      top: 30%;
+    }
+
+    .right-shape {
+      right: 0;
+      width: 120px;
+      height: 120px;
+      top: 60%;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 50px;
+      background-color: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      height: 125px;
+      width: 125px;
+      object-fit: contain;
+    }
+
+    .company-title {
+      font-size: 20px;
+      text-align: center;
+      color: white;
+      max-width: 600px;
+      line-height: 1.4;
+      animation: fadeIn 2s ease-out;
+    }
+
+    .title-section {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      border: 3px solid #FFD700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+      width: 380px;
+      animation: fadeInUp 1.5s ease forwards, glow 3s infinite alternate;
+      opacity: 0;
+      z-index: 2;
+    }
+
+    @keyframes fadeInUp {
+      0% { transform: translateY(40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.9); }
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #FFD700;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #4cae4c;
+      transform: scale(1.03);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    #error-message {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    a {
+      color: #0452ab;
+      text-decoration: underline;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      color: #003d80;
+      text-decoration: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Shapes -->
+  <div class="floating-shape left-shape"></div>
+  <div class="floating-shape right-shape"></div>
+
+  <!-- Header Section -->
+  <div class="header-container">
+    <img src="IMAGE/LOGO-removebg-preview.png" class="logo" alt="KAPAMALQ Logo">
+    
+    <div class="title-section">
+      <h1 class="company-title">
+        KAPISANAN SA PAG-IIMPOK AT PAGHIRAM<br>
+        NG MGA KAWANI NG PAMAHALAANG LUNGSOD QUEZON, INC.
+      </h1>
+    </div>
+
+    <img src="IMAGE/581-5819151_seal-of-quezon-city-lungsod-ng-quezon-city.png" class="logo" alt="Quezon City Seal">
+  </div>
+
+  <!-- Main Content Section -->
+  <div class="main-content">
+    <div class="login-container">
+      <h2 style="text-align: center;">Login</h2>
+      <form id="loginForm" action="/login" method="POST">
+        <label for="password">Code</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" id="adminLoginButton" onclick="return handleAdminLogin();">Admin</button>
+        <p id="error-message"></p>
+        <button type="button" id="viewOnlyButton" onclick="window.location.href='viewonly_page.html'">View Only</button>
+        
+        <p style="text-align: center; margin-top: 15px;">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jhonharold.rodriguez03@gmail.com,cabuhaldanielle@gmail.com&su=System%20Error&body=Hello%2C%20I%20need%20help%20with%20the%20system."
+             target="_blank">
+            Need help? Email us via Gmail
+          </a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function handleAdminLogin() {
+      const passwordInput = document.getElementById('password').value;
+      const errorMessage = document.getElementById('error-message');
+
+      const adminUser = { password: 'KAPQ5291962' };
+
+      if (passwordInput === adminUser.password) {
+        errorMessage.textContent = '';
+        window.location.href = 'admin_page.html';
+        return false;
+      } else {
+        errorMessage.textContent = 'Invalid Admin CODE.';
+        return false;
+      }
+    }
+  </script>
+
+</body>
+</html>

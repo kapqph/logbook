@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAPAMALQ Document Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better aesthetics and responsiveness */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0e7ff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            max-width: 90vw;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            font-size: 1rem;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+        .logout-btn {
+            background-color: #ef4444;
+        }
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+        .edit-btn {
+            background-color: #f59e0b; /* Amber */
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        .edit-btn:hover {
+            background-color: #d97706;
+        }
+        .delete-btn {
+            background-color: #ef4444; /* Red */
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        /* Hide the ID column */
+        th:first-child,
+        td:first-child {
+            display: none;
+        }
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:hover {
+            background-color: #f3f4f6;
+        }
+        .message-box {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+            font-weight: 500;
+            text-align: center;
+        }
+        .message-box.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Responsive table behavior */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #e5e7eb;
+                margin-bottom: 0.75rem;
+                border-radius: 0.5rem;
+                overflow: hidden;
+            }
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            td:before {
+                position: absolute;
+                top: 0;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: #4b5563;
+            }
+            /* Adjusted nth-of-type to account for the hidden first column (ID) */
+            td:nth-of-type(1):before { content: "Received By:"; } /* Was ID, now Received By */
+            td:nth-of-type(2):before { content: "Document:"; }    /* Was Received By, now Document */
+            td:nth-of-type(3):before { content: "Date:"; }        /* Was Document, now Date */
+            td:nth-of-type(4):before { content: "Control No.:"; } /* Was Date, now Control No. */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flex justify-between items-start mb-6">
+            <div class="flex items-center">
+                <img src="IMAGE/LOGO-removebg-preview.png" class="h-24 w-24" alt="KAPAMALQ Logo">
+                <h1 class="text-xl font-bold text-gray-800 ml-4">KAPISANAN SA PAG-IIMPOK AT PAGHIRAM NG MGA KAWANI NG PAMAHALAANG LUNGSOD QUEZON, INC.</h1>
+            </div>
+            <div class="flex flex-col items-end">
+                <img src="IMAGE/581-5819151_seal-of-quezon-city-lungsod-ng-quezon-city.png" class="h-24 w-24 mb-2" alt="Quezon City Seal">
+                <button onclick="logout()" class="logout-btn px-4 py-2 rounded-md text-sm">
+                    Exit
+                </button>
+            </div>
+        </div>
+
+        <div id="messageBox" class="message-box"></div>
+
+        <div class="mb-6 flex justify-between items-center">
+            <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search documents..." class="focus:ring-blue-500 focus:border-blue-500 w-2/3 md:w-3/4">
+        </div>
+
+
+        <div class="overflow-x-auto rounded-lg shadow-sm">
+            <table id="dataTable" class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th>ID</th> <th>Received By</th>
+                        <th>Document</th>
+                        <th>Date</th>
+                        <th>Control No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        console.log("KAPAMALQ Document Management script loaded.");
+
+        // IMPORTANT: Ensure this URL matches the actual path to your api.php file
+        // For example, if api.php is in 'C:\xampp\htdocs\api.php', then API_URL is 'http://localhost/api.php'
+        // If it's in 'C:\xampp\htdocs\LOGIN\api.php', then API_URL is 'http://localhost/LOGIN/api.php'
+        const API_URL = 'http://localhost/LOGIN/api.php';
+        const LOGOUT_URL = 'loginpage.html'; // Assuming logout simply redirects to login page
+
+        /**
+         * Displays a message in the message box.
+         * @param {string} message - The message to display.
+         * @param {boolean} isError - True if it's an error message, false for success.
+         */
+        function showMessage(message, isError = false) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            if (isError) {
+                messageBox.classList.add('error');
+            } else {
+                messageBox.classList.remove('error');
+            }
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        /**
+         * @function logout
+         * @description Handles the logout process (redirects to login page).
+         * NOTE: This is a client-side redirect. For proper logout, you might need a backend session invalidation.
+         */
+        function logout() {
+            // Using a custom modal for confirmation instead of browser's confirm()
+            // In a real application, you'd implement a custom modal UI.
+            if (window.confirm('Are you sure you want to logout?')) {
+                 // For this example, we'll just redirect.
+                 // In a real scenario, you'd make an AJAX call to a logout endpoint
+                 // that destroys the session on the server.
+                window.location.href = LOGOUT_URL;
+            }
+        }
+
+        /**
+         * @function searchTable
+         * @description Filters the table rows based on the input from the search bar.
+         */
+        function searchTable() {
+            console.log("searchTable function called.");
+            let input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                if (i === 0) continue; // Skip header row
+
+                let rowMatches = false;
+                td = tr[i].getElementsByTagName("td");
+
+                // Loop through all columns (including the hidden ID column for searchability)
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowMatches = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (rowMatches) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+
+
+        /**
+         * @function fetchDocuments
+         * @description Fetches documents from the backend and populates the table.
+         */
+        async function fetchDocuments() {
+            console.log("Fetching documents...");
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    const dataTableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+                    dataTableBody.innerHTML = ''; // Clear existing rows
+
+                    result.data.forEach(doc => {
+                        const newRow = dataTableBody.insertRow();
+                        // Insert ID, but it will be hidden by CSS
+                        newRow.insertCell(0).textContent = doc.id;
+                        newRow.insertCell(1).textContent = doc.received_by;
+                        newRow.insertCell(2).textContent = doc.document_title;
+                        newRow.insertCell(3).textContent = doc.document_date;
+                        newRow.insertCell(4).textContent = doc.control_no;
+                    });
+                    searchTable(); // Re-apply search filter after fetching
+                } else {
+                    showMessage(`Failed to fetch documents: ${result.message}`, true);
+                }
+            } catch (error) {
+                console.error('Error fetching documents:', error);
+                showMessage('An error occurred while fetching documents.', true);
+            }
+        }
+
+
+        // Fetch documents when the page loads
+        document.addEventListener('DOMContentLoaded', fetchDocuments);
+    </script>
+</body>
+</html>
